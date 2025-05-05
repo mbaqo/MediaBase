@@ -12,6 +12,7 @@
 }
 
 body {
+  position: relative;
   font-family: 'Poppins', sans-serif;
   font-size: 16px;
   background: var(--color-primary);
@@ -238,8 +239,7 @@ section h2 {
   margin-top: 20px;
 }
 
-.details-bottom {
-}
+.details-bottom {}
 
 .details-bottom li {
   margin: 15px 0;
@@ -340,4 +340,17 @@ section h2 {
 
 .alert-error {
   background: red;
+}
+
+@media (max-width: 800px) {
+  .details-top {
+    flex-direction: column;
+  }
+
+  .details-top img {
+    height: 100%;
+    width: 85%;
+    margin: 0px 30px;
+    object-fit: cover;
+  }
 }

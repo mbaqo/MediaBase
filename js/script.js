@@ -117,8 +117,8 @@ function getDetails(result, type) {
         : "images/no-image.jpg";
     // Set the title
     document.querySelector("#details h2").textContent = type === "movie" ? result.title : result.name;
-    // Set the ratings
-    document.querySelector("#rating").textContent = `${result.vote_average.toFixed(2)} / 10`
+    // Set the ratings - round to one
+    document.querySelector("#rating").textContent = `${result.vote_average.toFixed(1)} / 10`
     // Set the release Date / Air Date
     document.querySelector(".date").textContent = type === "movie" ? `Release Date: ${result.release_date}` : `Aired: ${result.first_air_date}`;
     // Set the description/overview
@@ -152,6 +152,28 @@ function getDetails(result, type) {
     document.querySelector("#status").textContent = result.status;
     // Set the production companies
     document.querySelector(".company").textContent = result.production_companies.map(company => company.name).join(", ");
+
+    // Set the backdrop
+    displayBackgroundImage(`${type}`, result.backdrop_path);
+}
+
+function displayBackgroundImage(type, path) {
+    if (path) {
+        const overlayDiv = document.createElement("div");
+        overlayDiv.style.backgroundImage = `url(https://image.tmdb.org/t/p/original${path})`;
+        overlayDiv.style.backgroundSize = "cover";
+        overlayDiv.style.backgroundPosition = "center";
+        overlayDiv.style.backgroundRepeat = "no-repeat";
+        overlayDiv.style.height = "100%";
+        overlayDiv.style.width = "100%";
+        overlayDiv.style.position = "absolute";
+        overlayDiv.style.top = "0";
+        overlayDiv.style.left = "0";
+        overlayDiv.style.zIndex = "-1";
+        overlayDiv.style.opacity = 0.1;
+
+        document.body.appendChild(overlayDiv);
+    }
 }
 
 function showSpinner() {
