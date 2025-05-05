@@ -44,6 +44,26 @@ async function displayPopularShows() {
     results.forEach(show => popularShowsDiv.appendChild(createCard(show, "tv")));
 }
 
+// Display movie details
+async function displayMovieDetails() {
+    // Gets the id from the query param in the URL
+    const movieId = window.location.search.split("=")[1];
+
+    const movie = await fetchAPIData(`movie/${movieId}`);
+
+    getDetails(movie, "movie");
+}
+
+// Display show details
+async function displayShowDetails() {
+    // Gets the id from the query param in the URL
+    const showId = window.location.search.split("=")[1];
+
+    const show = await fetchAPIData(`tv/${showId}`);
+
+    getDetails(show, "tv");
+}
+
 // Create either a movie or tv show card
 function createCard(result, type) {
     const cardDiv = document.createElement("div");
@@ -88,6 +108,52 @@ function createCard(result, type) {
     return cardDiv;
 }
 
+// Get the details of the movie or show
+// type - movie or tv
+function getDetails(result, type) {
+    // Set the Image
+    document.querySelector(".card-img-top").src = result.poster_path
+        ? `https://image.tmdb.org/t/p/w500${result.poster_path}`
+        : "images/no-image.jpg";
+    // Set the title
+    document.querySelector("#details h2").textContent = type === "movie" ? result.title : result.name;
+    // Set the ratings
+    document.querySelector("#rating").textContent = `${result.vote_average.toFixed(2)} / 10`
+    // Set the release Date / Air Date
+    document.querySelector(".date").textContent = type === "movie" ? `Release Date: ${result.release_date}` : `Aired: ${result.first_air_date}`;
+    // Set the description/overview
+    document.querySelector("#overview").textContent = result.overview;
+    // Set the genres
+    const genreList = document.querySelector(".genre");
+    result.genres.forEach((genre) => {
+        const li = document.createElement("li");
+        li.textContent = genre.name;
+        genreList.appendChild(li);
+    })
+    // Set the homepage button
+    document.querySelector('#details .btn').href = result.homepage;
+
+    // For Movies: set the budget, revenue, and runtime
+    if (type === "movie") {
+        if (result.budget !== 0) {
+            document.querySelector("#budget").textContent = `$${(result.budget.toLocaleString())}`;
+        }
+        if (result.revenue !== 0) {
+            document.querySelector("#revenue").textContent = `$${(result.revenue.toLocaleString())}`;
+        }
+        document.querySelector("#runtime").textContent = result.runtime + " minutes";
+    }
+    // For Shows: set the num EPs, Last ep Date
+    if (type === "tv") {
+        document.querySelector("#episodes").textContent = result.number_of_episodes;
+        document.querySelector("#lastEpisode").textContent = result.last_episode_to_air.air_date;
+    }
+    // Set the status
+    document.querySelector("#status").textContent = result.status;
+    // Set the production companies
+    document.querySelector(".company").textContent = result.production_companies.map(company => company.name).join(", ");
+}
+
 function showSpinner() {
     document.querySelector(".spinner").classList.add("show");
 }
@@ -118,10 +184,10 @@ function init() {
             displayPopularShows();
             break;
         case "/movie-details.html":
-            console.log("Movie Details");
+            displayMovieDetails();
             break;
         case "/tv-details.html":
-            console.log("TV Details");
+            displayShowDetails();
             break;
         case "/search.html":
             console.log("Search");

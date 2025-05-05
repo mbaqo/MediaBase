@@ -48,14 +48,14 @@
               alt="Movie Title"
             />
           </div>
-          <div>
+          <div id="details">
             <h2>Movie Title</h2>
             <p>
               <i class="fas fa-star text-primary"></i>
-              8 / 10
+              <span id="rating">8 / 10</span>
             </p>
-            <p class="text-muted">Release Date: XX/XX/XXXX</p>
-            <p>
+            <p class="text-muted date">Release Date: XX/XX/XXXX</p>
+            <p id="overview">
               Lorem ipsum dolor sit amet consectetur adipisicing elit. Maiores
               atque molestiae error debitis provident dolore hic odit, impedit
               sint, voluptatum consectetur assumenda expedita perferendis
@@ -65,10 +65,7 @@
               ipsam. Cumque omnis ad recusandae.
             </p>
             <h5>Genres</h5>
-            <ul class="list-group">
-              <li>Genre 1</li>
-              <li>Genre 2</li>
-              <li>Genre 3</li>
+            <ul class="list-group genre">
             </ul>
             <a href="#" target="_blank" class="btn">Visit Movie Homepage</a>
           </div>
@@ -76,13 +73,13 @@
         <div class="details-bottom">
           <h2>Movie Info</h2>
           <ul>
-            <li><span class="text-secondary">Budget:</span> $1,000,000</li>
-            <li><span class="text-secondary">Revenue:</span> $2,000,000</li>
-            <li><span class="text-secondary">Runtime:</span> 90 minutes</li>
-            <li><span class="text-secondary">Status:</span> Released</li>
+            <li><span class="text-secondary">Budget:</span> <span id="budget">-</span></li>
+            <li><span class="text-secondary">Revenue:</span> <span id="revenue">-</span></li>
+            <li><span class="text-secondary">Runtime:</span> <span id="runtime">-</span></li>
+            <li><span class="text-secondary">Status:</span> <span id="status">-</span></li>
           </ul>
           <h4>Production Companies</h4>
-          <div class="list-group">Company 1, Company 2, Company 3</div>
+          <div class="list-group company">Company 1, Company 2, Company 3</div>
         </div>
       </div>
     </section>
