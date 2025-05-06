@@ -8,6 +8,8 @@
 - [x] Dynamically assign input name in `search.html` based on query param
 - [x] Add opacity and positioning styles to background overlay
 - [x] Connect search form across `index.html`, `shows.html`, and `search.html`
+- [x] Added Search Results 
+- [ ] Add back to results button
 - [ ] Finish the search feature 
 
 ---
