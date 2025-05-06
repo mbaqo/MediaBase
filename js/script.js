@@ -312,6 +312,16 @@ function changeSearchType() {
     }
 }
 
+function backToSearchButton() {
+    const button = document.querySelector(".back a");
+    // Checks if the previous page is search.html
+    const referrer = document.referrer;
+
+    if (referrer.includes("search.html")) {
+        button.textContent = "Back To Search Results"
+    }
+}
+
 // Highlight active link
 function highlightActiveLink() {
     const navLinks = document.querySelectorAll(".nav-link");
@@ -348,9 +358,11 @@ function init() {
             break;
         case "/movie-details.html":
             displayMovieDetails();
+            backToSearchButton();
             break;
         case "/tv-details.html":
             displayShowDetails();
+            backToSearchButton();
             break;
         case "/search.html":
             changeSearchType();
