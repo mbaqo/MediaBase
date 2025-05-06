@@ -4,7 +4,8 @@ const global = {
         term: "",
         type: "",
         page: 1,
-        totalPages: 1
+        totalPages: 1,
+        totalResults: 0
     }
 };
 
@@ -92,11 +93,66 @@ async function search() {
     const searchCardsDiv = document.querySelector("#search-results");
     // The type is already initialised in changSearchType
     // The search term is also initialised in changeSearchType
-    const { results } = await fetchSearchAPIData();
-    console.log(results);
+    const { results, total_pages, page, total_results } = await fetchSearchAPIData();
 
+    global.search.page = page;
+    global.search.totalPages = total_pages;
+    global.search.totalResults = total_results;
+
+    const searchHeading = document.querySelector("#search-results-heading h2");
+    if (total_results !== 0) {
+        searchHeading.textContent = `${results.length} of ${global.search.totalResults} Results for "${global.search.term}"`;
+    } else {
+        searchHeading.textContent = `No Results Found for "${global.search.term}"`;
+    }
+
+    
     results.forEach(result => searchCardsDiv.appendChild(createCard(result, `${global.search.type}`)));
 
+    displayPagination();
+}
+
+// Create and Display Pagination for Search
+function displayPagination() {
+    const pageCounter = document.querySelector(".page-counter");
+    pageCounter.textContent =  `Page ${global.search.page} of ${global.search.totalPages}`;
+
+    // Disable buttons
+    if (global.search.page === 1) {
+        document.querySelector("#prev").style.display ="none";
+    } else {
+        document.querySelector("#prev").style.display ="";
+    }
+    if (global.search.page === global.search.totalPages) {
+        document.querySelector("#next").style.display ="none";
+    } else {
+        document.querySelector("#next").style.display ="";
+    }
+}
+
+function setupPaginationControls() {
+    const prev = document.querySelector("#prev");
+    const next = document.querySelector("#next");
+  
+    prev.addEventListener("click", async () => {
+      if (global.search.page > 1) {
+        global.search.page--;
+        clearSearchResults();
+        await search();
+      }
+    });
+  
+    next.addEventListener("click", async () => {
+      if (global.search.page < global.search.totalPages) {
+        global.search.page++;
+        clearSearchResults();
+        await search();
+      }
+    });
+  }
+
+function clearSearchResults() {
+    document.querySelector("#search-results").replaceChildren();
 }
 
 // Display 20 most popular movies
@@ -322,7 +378,7 @@ function backToSearchButton() {
     }
 }
 
-function showAlert() {
+function showSearchAlert() {
     const inputBox = document.querySelector("#search-term");
     const inputButton = document.querySelector(".search-flex button");
     inputBox.value = "Please Enter a Valid Search Term!";
@@ -383,6 +439,7 @@ function init() {
         case "/search.html":
             changeSearchType();
             search();
+            setupPaginationControls();
             break;
     }
 
@@ -392,8 +449,8 @@ function init() {
 document.addEventListener("DOMContentLoaded", init);
 document.querySelector(".search-form").addEventListener("submit", (e) => {
     const input = document.querySelector("#search-term");
-    if (input.value === "" || input.value === null || input.style.color === "red" || input.value === " ") {
+    if (input.value === "" || input.value === null || input.style.color === "red") {
         e.preventDefault();
-        showAlert();
+        showSearchAlert();
     }
 });
