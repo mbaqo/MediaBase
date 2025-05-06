@@ -322,6 +322,22 @@ function backToSearchButton() {
     }
 }
 
+function showAlert() {
+    const inputBox = document.querySelector("#search-term");
+    const inputButton = document.querySelector(".search-flex button");
+    inputBox.value = "Please Enter a Valid Search Term!";
+    inputBox.style.color = "red";
+    inputBox.disabled = true;
+    inputButton.disabled = true;
+
+    setTimeout(() => {
+        inputBox.value = "";
+        inputBox.style.color = "#fff";
+        inputBox.disabled = false;
+        inputButton.disabled = false;
+    }, 3000);
+}
+
 // Highlight active link
 function highlightActiveLink() {
     const navLinks = document.querySelectorAll(".nav-link");
@@ -374,3 +390,10 @@ function init() {
 }
 
 document.addEventListener("DOMContentLoaded", init);
+document.querySelector(".search-form").addEventListener("submit", (e) => {
+    const input = document.querySelector("#search-term");
+    if (input.value === "" || input.value === null || input.style.color === "red" || input.value === " ") {
+        e.preventDefault();
+        showAlert();
+    }
+});

@@ -9,11 +9,8 @@
 - [x] Add opacity and positioning styles to background overlay
 - [x] Connect search form across `index.html`, `shows.html`, and `search.html`
 - [x] Added Search Results 
-- [ ] Add back to results button
+- [x] Add back to results button
+- [ ] Add alert message
+- [ ] Add pagination
 - [ ] Finish the search feature 
 
----
-
-✅ All of these tasks were completed in recent commits to `pageRevamp`.
-
-> This file reflects **done work only** based on commit messages — not a plan for the future.
