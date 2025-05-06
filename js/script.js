@@ -24,6 +24,42 @@ async function fetchAPIData(endpoint) {
     return data;
 }
 
+// Display Slider
+async function displaySlider(type) {
+    const { results } = await fetchAPIData(`${type}/now_playing`);
+    console.log(results);
+
+    // Make a slide for each results
+    results.forEach((result) => {
+        document.querySelector(".swiper-wrapper").appendChild(createSliderCard(result, type));
+
+        initSwiper();
+    });
+}
+
+function initSwiper() {
+    const swiper = new Swiper(".swiper", {
+        slidesPerView: 1,
+        spaceBetween: 30,
+        freeMode: true,
+        loop: true,
+        autoplay: {
+            delay: 4000
+        },
+        breakpoints: {
+            500: {
+                slidesPerView: 2
+            },
+            700: {
+                slidesPerView: 3
+            },
+            1200: {
+                slidesPerView: 4
+            }
+        }
+    })
+}
+
 // Display 20 most popular movies
 async function displayPopularMovies() {
     const popularMoviesDiv = document.querySelector("#popular-movies");
@@ -62,6 +98,40 @@ async function displayShowDetails() {
     const show = await fetchAPIData(`tv/${showId}`);
 
     getDetails(show, "tv");
+}
+
+// Creates slider Card
+function createSliderCard(result, type) {
+    const slideDiv = document.createElement("div");
+    slideDiv.classList.add("swiper-slide");
+
+    //-> This link goes in the slideDiv class
+    const detailLink = document.createElement("a");
+    detailLink.href = `${type}-details.html?id=${result.id}`;
+    //->-> This img goes in the detailLink
+    const img = document.createElement("img");
+    img.src = result.poster_path
+        ? `https://image.tmdb.org/t/p/w500${result.poster_path}`
+        : "images/no-image.jpg";
+    img.alt = "Movie Poster";
+    detailLink.appendChild(img);
+
+    //-> This h4 (rating) goes in the slideDiv
+    const h4 = document.createElement("h4");
+    h4.classList.add("swiper-rating");
+    //->-> This icon goes in the h4
+    const starIcon = document.createElement("i");
+    starIcon.classList.add("fas", "fa-star", "text-secondary");
+    //->-> This span goes in the h4
+    const span = document.createElement("span");
+    span.textContent = `${result.vote_average.toFixed(1)} / 10`;
+    h4.appendChild(starIcon);
+    h4.appendChild(span);
+
+    slideDiv.appendChild(detailLink);
+    slideDiv.appendChild(h4);
+
+    return slideDiv;
 }
 
 // Create either a movie or tv show card
@@ -111,6 +181,9 @@ function createCard(result, type) {
 // Get the details of the movie or show
 // type - movie or tv
 function getDetails(result, type) {
+    // Set the backdrop
+    displayBackgroundImage(`${type}`, result.backdrop_path);
+
     // Set the Image
     document.querySelector(".card-img-top").src = result.poster_path
         ? `https://image.tmdb.org/t/p/w500${result.poster_path}`
@@ -152,9 +225,6 @@ function getDetails(result, type) {
     document.querySelector("#status").textContent = result.status;
     // Set the production companies
     document.querySelector(".company").textContent = result.production_companies.map(company => company.name).join(", ");
-
-    // Set the backdrop
-    displayBackgroundImage(`${type}`, result.backdrop_path);
 }
 
 function displayBackgroundImage(type, path) {
@@ -191,7 +261,14 @@ function highlightActiveLink() {
         if (link.getAttribute("href") === global.currentPage) {
             link.classList.add("active");
         }
+
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        if (link.textContent.toLowerCase().includes(urlParams.get("type"))) {
+            link.classList.add("active");
+        }
     })
+
 }
 
 //Init App
@@ -201,6 +278,7 @@ function init() {
         case "/":
         case "/index.html":
             displayPopularMovies();
+            displaySlider("movie");
             break;
         case "/shows.html":
             displayPopularShows();
