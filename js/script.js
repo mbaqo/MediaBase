@@ -26,8 +26,8 @@ async function fetchAPIData(endpoint) {
 
 // Display Slider
 async function displaySlider(type) {
-    const { results } = await fetchAPIData(`${type}/now_playing`);
-    console.log(results);
+    const endpoint = type === "movie" ? `${type}/now_playing` : `${type}/on_the_air`
+    const { results } = await fetchAPIData(endpoint);
 
     // Make a slide for each results
     results.forEach((result) => {
@@ -282,6 +282,7 @@ function init() {
             break;
         case "/shows.html":
             displayPopularShows();
+            displaySlider("tv");
             break;
         case "/movie-details.html":
             displayMovieDetails();

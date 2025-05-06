@@ -270,10 +270,6 @@ section h2 {
   max-width: 600px;
 }
 
-.search-radio label {
-  margin-right: 15px;
-}
-
 .search-flex {
   display: flex;
   justify-content: space-between;
@@ -294,7 +290,7 @@ section h2 {
 }
 
 .search .container form input[type='text']::placeholder {
-  color: #fff;
+  color: #bababa;
 }
 
 .search .container form input[type='text']:focus {

@@ -37,7 +37,7 @@
 
     <!-- Now Playing Section -->
     <section class="now-playing">
-      <h2>Now Playing</h2>
+      <h2>Recent Releases</h2>
       <div class="swiper">
         <div class="swiper-wrapper">
           <!-- <div class="swiper-slide">
@@ -57,19 +57,12 @@
       <div class="container">
         <div id="alert"></div>
         <form action="/search.html" class="search-form">
-          <!-- movies and shows radio box -->
-          <div class="search-radio">
-            <input type="radio" id="movie" name="type" value="movie" checked />
-            <label for="movie">Movies</label>
-            <input type="radio" id="tv" name="type" value="tv" />
-            <label for="tv">TV Shows</label>
-          </div>
           <div class="search-flex">
             <input
               type="text"
-              name="search-term"
+              name="movie-search-term"
               id="search-term"
-              placeholder="Enter search term"
+              placeholder="Enter Movie Name"
             />
             <button class="btn" type="submit">
               <i class="fas fa-search"></i>
