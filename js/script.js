@@ -254,6 +254,20 @@ function hideSpinner() {
     document.querySelector(".spinner").classList.remove("show");
 }
 
+function changeSearchType() {
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const input = document.querySelector("#search-term");
+    if (urlParams.has("movie-search-term")) {
+        input.name = "movie-search-term";
+        input.placeholder = "Enter Movie Name";
+    }
+    if (urlParams.has("tv-search-term")) {
+        input.name = "tv-search-term";
+        input.placeholder = "Enter Show Name";
+    }
+}
+
 // Highlight active link
 function highlightActiveLink() {
     const navLinks = document.querySelectorAll(".nav-link");
@@ -264,7 +278,11 @@ function highlightActiveLink() {
 
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
-        if (link.textContent.toLowerCase().includes(urlParams.get("type"))) {
+        // Highlight movies or tv shows link when searching
+        if (link.textContent.includes("Movies") && urlParams.has("movie-search-term")) {
+            link.classList.add("active");
+        }
+        if (link.textContent.includes("Shows") && urlParams.has("tv-search-term")) {
             link.classList.add("active");
         }
     })
@@ -291,7 +309,7 @@ function init() {
             displayShowDetails();
             break;
         case "/search.html":
-            console.log("Search");
+            changeSearchType();
             break;
     }
 
