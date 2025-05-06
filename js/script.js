@@ -1,5 +1,11 @@
 const global = {
-    currentPage: window.location.pathname
+    currentPage: window.location.pathname,
+    search: {
+        term: "",
+        type: "",
+        page: 1,
+        totalPages: 1
+    }
 };
 
 //Fetch Data from TMDB API
@@ -16,6 +22,27 @@ async function fetchAPIData(endpoint) {
     };
 
     const URL = `${API_URL}${endpoint}${endpoint.includes("?") ? "&" : "?"}language=en-US`;
+
+    const response = await fetch(URL, options);
+
+    const data = await response.json();
+    hideSpinner();
+    return data;
+}
+
+async function fetchSearchAPIData() {
+    showSpinner();
+    const API_URL = "https://api.themoviedb.org/3/";
+
+    const options = {
+        method: 'GET',
+        headers: {
+            accept: 'application/json',
+            Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3NWQ4YTk2NThjOTRkNThmYzE4MTdjMTJjNWYzNDcxZSIsIm5iZiI6MTc0NjMyNjcyMi4wODQsInN1YiI6IjY4MTZkNGMyNWFlMmYzYjhiOThiNjM4ZCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.eF4hrLblatBxN6rZ5OuV7MX2wjkXjL-04UcN5pr5TE8'
+        }
+    };
+
+    const URL = `${API_URL}search/${global.search.type}?query=${global.search.term}&language=en-US&page=${global.search.page}`;
 
     const response = await fetch(URL, options);
 
@@ -58,6 +85,18 @@ function initSwiper() {
             }
         }
     })
+}
+
+// Display Search Results
+async function search() {
+    const searchCardsDiv = document.querySelector("#search-results");
+    // The type is already initialised in changSearchType
+    // The search term is also initialised in changeSearchType
+    const { results } = await fetchSearchAPIData();
+    console.log(results);
+
+    results.forEach(result => searchCardsDiv.appendChild(createCard(result, `${global.search.type}`)));
+
 }
 
 // Display 20 most popular movies
@@ -259,10 +298,15 @@ function changeSearchType() {
     const urlParams = new URLSearchParams(queryString);
     const input = document.querySelector("#search-term");
     if (urlParams.has("movie-search-term")) {
+        // Sets the search type and term
+        global.search.type = "movie";
+        global.search.term = urlParams.get("movie-search-term");
         input.name = "movie-search-term";
         input.placeholder = "Enter Movie Name";
     }
     if (urlParams.has("tv-search-term")) {
+        global.search.type = "tv";
+        global.search.term = urlParams.get("tv-search-term");
         input.name = "tv-search-term";
         input.placeholder = "Enter Show Name";
     }
@@ -310,6 +354,7 @@ function init() {
             break;
         case "/search.html":
             changeSearchType();
+            search();
             break;
     }
 
