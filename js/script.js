@@ -473,39 +473,33 @@ function highlightActiveLink() {
 
 //Init App
 function init() {
-    // Check what page we are on
-    switch (global.currentPage) {
-        case "/":
-        case "/index.html":
-            addSearchlistener();
-            displayPopularMovies();
-            displaySlider("movie");
-            break;
-        case "/shows.html":
-            addSearchlistener();
-            displayPopularShows();
-            displaySlider("tv");
-            break;
-        case "/movie-details.html":
-            displayMovieDetails();
-            backToSearchButton();
-            displayCast("movie");
-            break;
-        case "/tv-details.html":
-            displayShowDetails();
-            backToSearchButton();
-            displayCast("tv");
-            break;
-        case "/search.html":
-            addSearchlistener();
-            changeSearchType();
-            search();
-            setupPaginationControls();
-            break;
+    const page = global.currentPage;
+   
+    if (["/", "/index.html"].includes(page)) {
+        addSearchlistener();
+        displayPopularMovies();
+        displaySlider("movie");
+    } else if (page.includes("shows")) {
+        addSearchlistener();
+        displayPopularShows();
+        displaySlider("tv");
+    } else if (page.includes("movie-details")) {
+        displayMovieDetails();
+        backToSearchButton();
+        displayCast("movie");
+    } else if (page.includes("tv-details")) {
+        displayShowDetails();
+        backToSearchButton();
+        displayCast("tv");
+    } else if (page.includes("search")) {
+        addSearchlistener();
+        changeSearchType();
+        search();
+        setupPaginationControls();
     }
-
+   
     highlightActiveLink();
-}
+  }
 
 document.addEventListener("DOMContentLoaded", init);
 
