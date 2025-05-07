@@ -199,11 +199,57 @@ async function displayShowDetails() {
     getDetails(show, "tv");
 }
 
-// async function displayCast(type) {
-//     const mediaId = window.location.search.split("=")[1];
+async function displayCast(type) {
+    const actorList = document.querySelector(".actors");
+    const mediaId = window.location.search.split("=")[1];
 
-//     const credits = await fetchAPIData(`${type}/${mediaId}/credits`);
-// }
+    const credits = await fetchAPIData(`${type}/${mediaId}/credits`);
+
+    credits.cast.forEach((actor) => actorList.appendChild(createCastCard(actor)));
+}
+
+function createCastCard(actor) {
+    const actorCard = document.createElement("li");
+    actorCard.classList.add("actor-card");
+
+    //-> This link goes actorCard
+    const link = document.createElement("a");
+    link.href = `https://www.themoviedb.org/person/${actor.id}`;
+    link.target = "_blank";
+
+    //->-> This div goes in the link
+    const imgDiv = document.createElement("div");
+    imgDiv.classList.add("actor-img");
+    //->->-> This image goes in the imgDiv
+    const actorImage = document.createElement("img");
+    if (actor.profile_path) {
+        actorImage.src = `https://media.themoviedb.org/t/p/w500${actor.profile_path}`;
+    } else {
+        actorImage.src = "images/no-image.jpg";
+    }
+    actorImage.alt = "Cast Image";
+    imgDiv.appendChild(actorImage);
+
+    //->-> This div goes in the link
+    const infoDiv = document.createElement("div");
+    infoDiv.classList.add("actor-info");
+    //->->-> Both p's goes in the infoDiv
+    const name = document.createElement("p");
+    name.classList.add("actor-name");
+    name.textContent = actor.name;
+    const character = document.createElement("p");
+    character.classList.add("character-name");
+    character.textContent = actor.character;
+    infoDiv.appendChild(name);
+    infoDiv.appendChild(character);
+
+    link.appendChild(imgDiv);
+    link.appendChild(infoDiv)
+
+    actorCard.appendChild(link);
+
+    return actorCard;
+}
 
 // Creates slider Card
 function createSliderCard(result, type) {
@@ -443,11 +489,12 @@ function init() {
         case "/movie-details.html":
             displayMovieDetails();
             backToSearchButton();
-            // displayCast("movie");
+            displayCast("movie");
             break;
         case "/tv-details.html":
             displayShowDetails();
             backToSearchButton();
+            displayCast("tv");
             break;
         case "/search.html":
             addSearchlistener();

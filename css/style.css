@@ -255,9 +255,9 @@ section h2 {
   height: 320px;
   border-radius: 10px;
   flex: 0.16;
-  background-color: #fff;
+  background-color: #ffffff5a;
   margin-right: 30px;
-  overflow: hidden;
+  overflow-y: scroll;
 }
 .cast-scroller .actor-card:first-child {
   margin-left: 10px;
