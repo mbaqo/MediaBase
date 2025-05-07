@@ -199,6 +199,12 @@ async function displayShowDetails() {
     getDetails(show, "tv");
 }
 
+// async function displayCast(type) {
+//     const mediaId = window.location.search.split("=")[1];
+
+//     const credits = await fetchAPIData(`${type}/${mediaId}/credits`);
+// }
+
 // Creates slider Card
 function createSliderCard(result, type) {
     const slideDiv = document.createElement("div");
@@ -437,6 +443,7 @@ function init() {
         case "/movie-details.html":
             displayMovieDetails();
             backToSearchButton();
+            // displayCast("movie");
             break;
         case "/tv-details.html":
             displayShowDetails();
