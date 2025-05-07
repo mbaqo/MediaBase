@@ -60,19 +60,23 @@ async function displaySlider(type) {
     // Make a slide for each results
     results.forEach((result) => {
         document.querySelector(".swiper-wrapper").appendChild(createSliderCard(result, type));
-
-        initSwiper();
     });
+
+    document.addEventListener("DOMContentLoaded", initSwiper());
 }
 
 function initSwiper() {
+
     const swiper = new Swiper(".swiper", {
         slidesPerView: 1,
+        preventClicks: true,
+        preventClicksPropagation: true,
         spaceBetween: 30,
         freeMode: true,
         loop: true,
         autoplay: {
-            delay: 4000
+            delay: 4000,
+            disableOnInteraction: false
         },
         breakpoints: {
             500: {
@@ -85,7 +89,7 @@ function initSwiper() {
                 slidesPerView: 4
             }
         }
-    })
+    });
 }
 
 // Display Search Results
@@ -106,7 +110,7 @@ async function search() {
         searchHeading.textContent = `No Results Found for "${global.search.term}"`;
     }
 
-    
+
     results.forEach(result => searchCardsDiv.appendChild(createCard(result, `${global.search.type}`)));
 
     displayPagination();
@@ -115,41 +119,41 @@ async function search() {
 // Create and Display Pagination for Search
 function displayPagination() {
     const pageCounter = document.querySelector(".page-counter");
-    pageCounter.textContent =  `Page ${global.search.page} of ${global.search.totalPages}`;
+    pageCounter.textContent = `Page ${global.search.page} of ${global.search.totalPages}`;
 
     // Disable buttons
     if (global.search.page === 1) {
-        document.querySelector("#prev").style.display ="none";
+        document.querySelector("#prev").style.display = "none";
     } else {
-        document.querySelector("#prev").style.display ="";
+        document.querySelector("#prev").style.display = "";
     }
     if (global.search.page === global.search.totalPages) {
-        document.querySelector("#next").style.display ="none";
+        document.querySelector("#next").style.display = "none";
     } else {
-        document.querySelector("#next").style.display ="";
+        document.querySelector("#next").style.display = "";
     }
 }
 
 function setupPaginationControls() {
     const prev = document.querySelector("#prev");
     const next = document.querySelector("#next");
-  
+
     prev.addEventListener("click", async () => {
-      if (global.search.page > 1) {
-        global.search.page--;
-        clearSearchResults();
-        await search();
-      }
+        if (global.search.page > 1) {
+            global.search.page--;
+            clearSearchResults();
+            await search();
+        }
     });
-  
+
     next.addEventListener("click", async () => {
-      if (global.search.page < global.search.totalPages) {
-        global.search.page++;
-        clearSearchResults();
-        await search();
-      }
+        if (global.search.page < global.search.totalPages) {
+            global.search.page++;
+            clearSearchResults();
+            await search();
+        }
     });
-  }
+}
 
 function clearSearchResults() {
     document.querySelector("#search-results").replaceChildren();
@@ -421,10 +425,12 @@ function init() {
     switch (global.currentPage) {
         case "/":
         case "/index.html":
+            addSearchlistener();
             displayPopularMovies();
             displaySlider("movie");
             break;
         case "/shows.html":
+            addSearchlistener();
             displayPopularShows();
             displaySlider("tv");
             break;
@@ -437,6 +443,7 @@ function init() {
             backToSearchButton();
             break;
         case "/search.html":
+            addSearchlistener();
             changeSearchType();
             search();
             setupPaginationControls();
@@ -447,10 +454,13 @@ function init() {
 }
 
 document.addEventListener("DOMContentLoaded", init);
-document.querySelector(".search-form").addEventListener("submit", (e) => {
-    const input = document.querySelector("#search-term");
-    if (input.value === "" || input.value === null || input.style.color === "red") {
-        e.preventDefault();
-        showSearchAlert();
-    }
-});
+
+function addSearchlistener() {
+    document.querySelector(".search-form").addEventListener("submit", (e) => {
+        const input = document.querySelector("#search-term");
+        if (input.value === "" || input.value === null || input.style.color === "red") {
+            e.preventDefault();
+            showSearchAlert();
+        }
+    });
+}
